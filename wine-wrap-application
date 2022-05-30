@@ -6,11 +6,19 @@
 # brew install coreutils (gsort)
 #
 
-wine --version || ( echo "missing wine" ; exit )
-echo -n "exiftool " ; exiftool -ver || ( echo "missing exiftool" ; exit )
-icotool --version | grep icoutils || ( echo "missing icoutils" ; exit )
-wrestool --version | grep icoutils || ( echo "missing icoutils" ; exit )
-gsort --version | grep coreutils || ( echo "missing coreutils" ; exit )
+trap "exit 1" 10
+PROC="$$"
+
+fatal(){
+  echo "$@" >&2
+  kill -10 $PROC
+}
+
+wine --version || ( fatal "missing wine" )
+echo -n "exiftool " ; exiftool -ver || ( fatal "missing exiftool" )
+icotool --version | grep icoutils || ( fatal "missing icoutils" )
+wrestool --version | grep icoutils || ( fatal "missing icoutils" )
+gsort --version | grep coreutils || ( fatal "missing coreutils" )
 
 PREFIX="${WINEPREFIX:-$HOME/.wine}"
 echo "Wine Prefix:            $PREFIX"
