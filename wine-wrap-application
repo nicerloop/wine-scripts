@@ -6,12 +6,12 @@
 # brew install coreutils (gsort)
 #
 
-trap "exit 1" 10
+trap "exit 1" 15
 PROC="$$"
 
 fatal(){
   echo "$@" >&2
-  kill -10 $PROC
+  kill -15 $PROC
 }
 
 wine --version || ( fatal "missing wine" )
@@ -66,8 +66,7 @@ mkdir -p "$BIN_DIR"
 cd "$BIN_DIR" || exit
 cat > "$FILE_NAME" << EOF
 #!/bin/sh
-# WINEPREFIX="$PREFIX" exec $WINE "$TARGET_EXE"
-WINEPREFIX="$PREFIX" $WINE "$TARGET_EXE" &
+WINEPREFIX="$PREFIX" $WINE "$TARGET_EXE" "\$@" &
 EOF
 chmod +x "$FILE_NAME"
 
